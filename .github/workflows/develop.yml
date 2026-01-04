@@ -3,6 +3,7 @@ name: Develop CI/CD
 on:
   push:
     branches: [develop]
+  workflow_dispatch:
 
 jobs:
   test-and-scan:

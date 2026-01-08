@@ -1,12 +1,13 @@
 import { IsEmail, IsString, MinLength, IsEnum, IsOptional } from 'class-validator';
 import { UserRole } from '../../users/entities/user.entity';
+import { IsStrongPassword } from '../decorators/is-strong-password.decorator';
 
 export class RegisterDto {
   @IsEmail()
   email: string;
 
   @IsString()
-  @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  @IsStrongPassword()
   password: string;
 
   @IsString()

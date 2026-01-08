@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User } from '../users/entities/user.entity';
 import { RefreshToken } from './entities/refresh-token.entity';
+import { CleanupRefreshTokensTask } from './tasks/cleanup-refresh-tokens.task';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { RefreshToken } from './entities/refresh-token.entity';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, CleanupRefreshTokensTask],
   exports: [AuthService],
 })
 export class AuthModule {}

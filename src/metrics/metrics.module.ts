@@ -1,5 +1,4 @@
 import { Module, Global } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import {
   PrometheusModule,
   makeCounterProvider,
@@ -7,7 +6,7 @@ import {
   makeGaugeProvider,
 } from '@willsoto/nestjs-prometheus';
 import { MetricsService } from './metrics.service';
-import { MetricsInterceptor } from './metrics.interceptor';
+import { MetricsMiddleware } from './metrics.middleware';
 
 @Global()
 @Module({
@@ -21,12 +20,7 @@ import { MetricsInterceptor } from './metrics.interceptor';
   ],
   providers: [
     MetricsService,
-    MetricsInterceptor,
-    // Register interceptor globally from within this module
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: MetricsInterceptor,
-    },
+    MetricsMiddleware,
     // HTTP Requests Counter
     makeCounterProvider({
       name: 'http_requests_total',
@@ -64,6 +58,6 @@ import { MetricsInterceptor } from './metrics.interceptor';
       labelNames: ['method', 'route'],
     }),
   ],
-  exports: [PrometheusModule, MetricsService],
+  exports: [PrometheusModule, MetricsService, MetricsMiddleware],
 })
 export class MetricsModule {}

@@ -7,7 +7,7 @@ const otlpEndpoint = process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
 
 let sdk: NodeSDK | null = null;
 
-if (otlpEndpoint) {
+if (otlpEndpoint && otlpEndpoint.trim() !== '') {
   sdk = new NodeSDK({
     serviceName: process.env.OTEL_SERVICE_NAME || 'user-service',
     traceExporter: new OTLPTraceExporter({

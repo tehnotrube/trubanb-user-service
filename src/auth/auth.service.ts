@@ -23,12 +23,21 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
-    // Check if user already exists
-    const existingUser = await this.usersRepository.findOne({
+    // Check if username already exists
+    const existingUsername = await this.usersRepository.findOne({
+      where: { username: registerDto.username },
+    });
+
+    if (existingUsername) {
+      throw new ConflictException('Username already taken');
+    }
+
+    // Check if email already exists
+    const existingEmail = await this.usersRepository.findOne({
       where: { email: registerDto.email },
     });
 
-    if (existingUser) {
+    if (existingEmail) {
       throw new ConflictException('Email already registered');
     }
 
@@ -54,10 +63,13 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    // Find user by email
-    const user = await this.usersRepository.findOne({
-      where: { email: loginDto.email },
-    });
+    // Find user by email or username
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.email = :emailOrUsername OR user.username = :emailOrUsername', {
+        emailOrUsername: loginDto.emailOrUsername,
+      })
+      .getOne();
 
     if (!user || !(await bcrypt.compare(loginDto.password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
@@ -102,18 +114,23 @@ export class AuthService {
     };
   }
 
-  async logout(refreshToken: string) {
-    await this.refreshTokensRepository.update(
-      { token: refreshToken },
-      { isRevoked: true },
-    );
+async logout(refreshToken: string) {
+  const result = await this.refreshTokensRepository.update(
+    { token: refreshToken },
+    { isRevoked: true },
+  );
+  
+  if (result.affected === 0) {
+    throw new UnauthorizedException('Invalid refresh token');
   }
+}
 
   private async generateTokens(user: User) {
     const payload = {
       sub: user.id,
       email: user.email,
       role: user.role,
+      iss: 'trubanb-service', // Kong JWT issuer key
     };
 
     // Access token: 15 minutes

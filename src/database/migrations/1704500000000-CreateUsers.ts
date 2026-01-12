@@ -16,10 +16,12 @@ export class CreateUsers1704500000000 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE "users" (
         "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+        "username" varchar NOT NULL UNIQUE,
         "email" varchar NOT NULL UNIQUE,
         "password" varchar NOT NULL,
         "firstName" varchar NOT NULL,
         "lastName" varchar NOT NULL,
+        "address" varchar NOT NULL,
         "role" "user_role_enum" NOT NULL DEFAULT 'guest',
         "isActive" boolean NOT NULL DEFAULT true,
         "createdAt" TIMESTAMP NOT NULL DEFAULT now(),

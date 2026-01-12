@@ -20,6 +20,9 @@ export class User {
   id: string;
 
   @Column({ unique: true })
+  username: string;
+
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -30,6 +33,9 @@ export class User {
 
   @Column()
   lastName: string;
+
+  @Column()
+  address: string;
 
   @Column({
     type: 'enum',

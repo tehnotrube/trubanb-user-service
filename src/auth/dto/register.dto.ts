@@ -3,6 +3,10 @@ import { UserRole } from '../../users/entities/user.entity';
 import { IsStrongPassword } from '../decorators/is-strong-password.decorator';
 
 export class RegisterDto {
+  @IsString()
+  @MinLength(3)
+  username: string;
+
   @IsEmail()
   email: string;
 
@@ -17,6 +21,10 @@ export class RegisterDto {
   @IsString()
   @MinLength(2)
   lastName: string;
+
+  @IsString()
+  @MinLength(3)
+  address: string;
 
   @IsOptional()
   @IsEnum(UserRole)

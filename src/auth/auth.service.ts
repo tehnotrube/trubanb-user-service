@@ -66,9 +66,12 @@ export class AuthService {
     // Find user by email or username
     const user = await this.usersRepository
       .createQueryBuilder('user')
-      .where('user.email = :emailOrUsername OR user.username = :emailOrUsername', {
-        emailOrUsername: loginDto.emailOrUsername,
-      })
+      .where(
+        'user.email = :emailOrUsername OR user.username = :emailOrUsername',
+        {
+          emailOrUsername: loginDto.emailOrUsername,
+        },
+      )
       .getOne();
 
     if (!user || !(await bcrypt.compare(loginDto.password, user.password))) {
@@ -114,16 +117,16 @@ export class AuthService {
     };
   }
 
-async logout(refreshToken: string) {
-  const result = await this.refreshTokensRepository.update(
-    { token: refreshToken },
-    { isRevoked: true },
-  );
-  
-  if (result.affected === 0) {
-    throw new UnauthorizedException('Invalid refresh token');
+  async logout(refreshToken: string) {
+    const result = await this.refreshTokensRepository.update(
+      { token: refreshToken },
+      { isRevoked: true },
+    );
+
+    if (result.affected === 0) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
-}
 
   private async generateTokens(user: User) {
     const payload = {
@@ -157,7 +160,7 @@ async logout(refreshToken: string) {
   }
 
   private sanitizeUser(user: User) {
-    const { password, ...result } = user;
+    const { password: _password, ...result } = user;
     return result;
   }
 }

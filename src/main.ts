@@ -26,11 +26,11 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
-  
+
   // Get the middleware instance from the DI container and apply it globally
   const metricsMiddleware = app.get(MetricsMiddleware);
   app.use(metricsMiddleware.use.bind(metricsMiddleware));
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+void bootstrap();

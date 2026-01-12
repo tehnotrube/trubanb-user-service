@@ -35,7 +35,7 @@ import { MetricsModule } from './metrics';
     AuthModule,
     UsersModule,
     HealthModule,
-    MetricsModule
+    MetricsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

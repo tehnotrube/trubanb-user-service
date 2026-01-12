@@ -106,7 +106,7 @@ export class UsersService {
   }
 
   private sanitizeUser(user: User) {
-    const { password, ...result } = user;
+    const { password: _password, ...result } = user;
     return result;
   }
 }

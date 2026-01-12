@@ -15,7 +15,10 @@ import { CleanupRefreshTokensTask } from './tasks/cleanup-refresh-tokens.task';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET', 'dev-jwt-secret-change-in-production'),
+        secret: configService.get<string>(
+          'JWT_SECRET',
+          'dev-jwt-secret-change-in-production',
+        ),
         signOptions: {
           algorithm: 'HS256',
         },

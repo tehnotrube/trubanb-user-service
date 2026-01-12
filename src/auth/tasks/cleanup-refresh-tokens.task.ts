@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThan } from 'typeorm';
 import { Repository } from 'typeorm';
 import { RefreshToken } from '../entities/refresh-token.entity';
 

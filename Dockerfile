@@ -1,17 +1,15 @@
-# syntax=docker/dockerfile:1.7-labs
-
 FROM node:20-alpine AS base
 WORKDIR /app
 ENV NODE_ENV=production
 
 FROM base AS deps
 COPY package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --omit=dev
+RUN npm ci --omit=dev
 
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci
+RUN npm ci
 COPY . .
 RUN npm run build
 

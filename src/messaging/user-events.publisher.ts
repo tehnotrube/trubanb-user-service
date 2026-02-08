@@ -4,6 +4,7 @@ import { UserRole } from 'src/auth/guards/roles.guard';
 
 export interface UserDeletedEvent {
   userId: string;
+  userEmail: string;
   userRole: UserRole; // e.g. ['GUEST', 'HOST']
 }
 
@@ -16,7 +17,9 @@ export class UserEventsPublisher {
   async publishUserDeleted(payload: UserDeletedEvent) {
     try {
       await this.amqp.publish('user.events', 'user.deleted', payload);
-      this.logger.log(`Published user.deleted → userId=${payload.userId}`);
+      this.logger.log(
+        `Published user.deleted → userId=${payload.userId}, email=${payload.userEmail}`,
+      );
     } catch (err) {
       this.logger.error(`Failed to publish user.deleted`, err);
     }

@@ -120,7 +120,13 @@ export class UsersService {
     userId: string,
     isHost: boolean,
   ): Promise<{ allowed: boolean; reason?: string }> {
-    const reply = await this.reservationClient.hasBlockingReservations(userId, isHost);
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const reply = await this.reservationClient.hasBlockingReservations(user.email, isHost);
 
     if (reply.hasBlockingReservations) {
       return {
@@ -146,6 +152,7 @@ export class UsersService {
 
     await this.userEventsPublisher.publishUserDeleted({
       userId,
+      userEmail: user.email,
       userRole: user.role,
     });
   }

@@ -4,7 +4,7 @@ import { firstValueFrom, Observable } from 'rxjs';
 
 
 interface HasActiveReservationsRequest {
-  userId: string;
+  userIdentifier: string; // email for hosts, userId for guests
   isHostCheck: boolean;
 }
 
@@ -34,19 +34,19 @@ export class ReservationClientService implements OnModuleInit {
   }
 
   async hasBlockingReservations(
-    userId: string,
+    userIdentifier: string,
     isHost: boolean,
   ): Promise<HasActiveReservationsResponse> {
     try {
       return await firstValueFrom(
         this.reservationService.hasActiveOrFutureReservations({
-          userId,
+          userIdentifier,
           isHostCheck: isHost,
         }),
       );
     } catch (error) {
       this.logger.error(
-        `gRPC call to hasActiveOrFutureReservations failed for user ${userId} (host=${isHost})`,
+        `gRPC call to hasActiveOrFutureReservations failed for identifier ${userIdentifier} (host=${isHost})`,
         error,
       );
 

@@ -2,9 +2,8 @@ import { Controller, Get, Put, Body, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateCredentialsDto } from './dtos/update-credentials.dto';
-import { KongJwtGuard } from '../auth/guards/kong-jwt.guard';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
+import { KongJwtGuard, CurrentUser } from '../auth';
+import type { AuthenticatedUser } from '../auth';
 
 @Controller('api/users')
 @UseGuards(KongJwtGuard)

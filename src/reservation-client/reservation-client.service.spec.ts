@@ -52,12 +52,16 @@ describe('ReservationClientService', () => {
         message: undefined,
       };
 
-      mockGrpcService.hasActiveOrFutureReservations.mockReturnValue(of(expected));
+      mockGrpcService.hasActiveOrFutureReservations.mockReturnValue(
+        of(expected),
+      );
 
       const result = await service.hasBlockingReservations(userId, false);
 
-      expect(mockGrpcService.hasActiveOrFutureReservations).toHaveBeenCalledWith({
-        userId,
+      expect(
+        mockGrpcService.hasActiveOrFutureReservations,
+      ).toHaveBeenCalledWith({
+        userIdentifier: userId,
         isHostCheck: false,
       });
       expect(result).toEqual(expected);
@@ -69,16 +73,19 @@ describe('ReservationClientService', () => {
         message: '3 future reservations found on your accommodations',
       };
 
-      mockGrpcService.hasActiveOrFutureReservations.mockReturnValue(of(expected));
+      mockGrpcService.hasActiveOrFutureReservations.mockReturnValue(
+        of(expected),
+      );
 
       const result = await service.hasBlockingReservations(userId, true);
 
       expect(result).toEqual(expected);
-      expect(mockGrpcService.hasActiveOrFutureReservations).toHaveBeenCalledWith({
-        userId,
+      expect(
+        mockGrpcService.hasActiveOrFutureReservations,
+      ).toHaveBeenCalledWith({
+        userIdentifier: userId,
         isHostCheck: true,
       });
     });
-
   });
 });

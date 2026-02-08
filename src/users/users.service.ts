@@ -115,7 +115,6 @@ export class UsersService {
     return result;
   }
 
-
   async canDeleteAccount(
     userId: string,
     isHost: boolean,
@@ -126,14 +125,23 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    const reply = await this.reservationClient.hasBlockingReservations(user.email, isHost);
+    console.log(`[canDeleteAccount] checking userId=${userId}, isHost=${isHost}`);
+
+    const reply = await this.reservationClient.hasBlockingReservations(
+      userId,
+      isHost,
+    );
+
+    console.log(`[canDeleteAccount] reply:`, reply);
 
     if (reply.hasBlockingReservations) {
       return {
         allowed: false,
-        reason: reply.message ?? (isHost
-          ? 'Cannot delete account: you have active or future reservations on your accommodations.'
-          : 'Cannot delete account: you have active or future reservations.'),
+        reason:
+          reply.message ??
+          (isHost
+            ? 'Cannot delete account: you have active or future reservations on your accommodations.'
+            : 'Cannot delete account: you have active or future reservations.'),
       };
     }
 

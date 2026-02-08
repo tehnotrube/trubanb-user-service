@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
-import { UserEventsPublisher } from './user-events.publisher'
+import { UserEventsPublisher } from './user-events.publisher';
 
 @Module({
   imports: [

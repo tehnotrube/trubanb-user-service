@@ -7,8 +7,11 @@ import { ReservationsClientModule } from '../reservation-client/reservation-clie
 import { MessagingModule } from 'src/messaging/messaging.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]),ReservationsClientModule,
-    MessagingModule],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    ReservationsClientModule,
+    MessagingModule,
+  ],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [TypeOrmModule],

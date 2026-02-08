@@ -3,19 +3,24 @@ import {
   NotFoundException,
   ConflictException,
   UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateCredentialsDto } from './dtos/update-credentials.dto';
+import { ReservationClientService } from '../reservation-client/reservation-client.service';
+import { UserEventsPublisher } from '../messaging/user-events.publisher';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private reservationClient: ReservationClientService,
+    private userEventsPublisher: UserEventsPublisher,
   ) {}
 
   async getProfile(userId: string) {
@@ -108,5 +113,40 @@ export class UsersService {
   private sanitizeUser(user: User) {
     const { password: _password, ...result } = user;
     return result;
+  }
+
+
+  async canDeleteAccount(
+    userId: string,
+    isHost: boolean,
+  ): Promise<{ allowed: boolean; reason?: string }> {
+    const reply = await this.reservationClient.hasBlockingReservations(userId, isHost);
+
+    if (reply.hasBlockingReservations) {
+      return {
+        allowed: false,
+        reason: reply.message ?? (isHost
+          ? 'Cannot delete account: you have active or future reservations on your accommodations.'
+          : 'Cannot delete account: you have active or future reservations.'),
+      };
+    }
+
+    return { allowed: true };
+  }
+
+  async deleteAccount(userId: string): Promise<void> {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.usersRepository.delete({ id: userId });
+    Logger.log(`User account deleted: ${userId}`);
+
+    await this.userEventsPublisher.publishUserDeleted({
+      userId,
+      userRole: user.role,
+    });
   }
 }

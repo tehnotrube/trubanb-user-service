@@ -3,6 +3,8 @@ import './tracing';
 
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { join } from 'path';
 import { AppModule } from './app.module';
 import { MetricsMiddleware } from './metrics';
 
@@ -31,6 +33,17 @@ async function bootstrap() {
   const metricsMiddleware = app.get(MetricsMiddleware);
   app.use(metricsMiddleware.use.bind(metricsMiddleware));
 
+  // Configure gRPC microservice
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.GRPC,
+    options: {
+      package: 'user',
+      protoPath: join(__dirname, 'proto/user.proto'),
+      url: `0.0.0.0:${process.env.GRPC_PORT ?? 50051}`,
+    },
+  });
+
+  await app.startAllMicroservices();
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();

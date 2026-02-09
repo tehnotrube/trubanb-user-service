@@ -18,7 +18,9 @@ export class NotificationPreferencesService {
     private preferencesRepository: Repository<NotificationPreference>,
   ) {}
 
-  async getPreferencesForUser(userId: string): Promise<NotificationPreference[]> {
+  async getPreferencesForUser(
+    userId: string,
+  ): Promise<NotificationPreference[]> {
     return this.preferencesRepository.find({
       where: { userId },
       order: { notificationType: 'ASC' },

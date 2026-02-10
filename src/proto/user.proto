@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package user;
+
+service UserService {
+  rpc GetNotificationPreferences (GetPreferencesRequest) returns (GetPreferencesResponse);
+}
+
+message GetPreferencesRequest {
+  string user_id = 1;
+}
+
+message GetPreferencesResponse {
+  bool reservation_request_created = 1;
+  bool reservation_request_responded = 2;
+  bool reservation_cancelled = 3;
+  bool host_rated = 4;
+  bool accommodation_rated = 5;
+}

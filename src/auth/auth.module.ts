@@ -4,9 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { User } from '../users/entities/user.entity';
+import { User } from '../users';
 import { RefreshToken } from './entities/refresh-token.entity';
 import { CleanupRefreshTokensTask } from './tasks/cleanup-refresh-tokens.task';
+import { NotificationPreferencesModule } from '../notification-preferences/notification-preferences.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CleanupRefreshTokensTask } from './tasks/cleanup-refresh-tokens.task';
         },
       }),
     }),
+    NotificationPreferencesModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, CleanupRefreshTokensTask],

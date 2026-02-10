@@ -6,8 +6,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { NotificationPreferencesModule } from './notification-preferences/notification-preferences.module';
 import { HealthModule } from './health/health.module';
-import { MetricsModule } from './metrics';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MetricsModule } from './metrics';
     }),
     AuthModule,
     UsersModule,
+    NotificationPreferencesModule,
     HealthModule,
     MetricsModule,
   ],

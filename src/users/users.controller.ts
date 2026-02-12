@@ -15,7 +15,7 @@ import { UpdateCredentialsDto } from './dtos/update-credentials.dto';
 import { KongJwtGuard } from '../auth/guards/kong-jwt.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
-import { UserRole } from 'src/auth/guards/roles.guard';
+import { UserRole } from '../auth/guards/roles.guard';
 
 @Controller('api/users')
 @UseGuards(KongJwtGuard)

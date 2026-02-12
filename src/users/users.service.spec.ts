@@ -11,6 +11,8 @@ import { UsersService } from './users.service';
 import { User, UserRole } from './entities/user.entity';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateCredentialsDto } from './dtos/update-credentials.dto';
+import { ReservationClientService } from '../reservation-client/reservation-client.service';
+import { UserEventsPublisher } from '../messaging/user-events.publisher';
 
 jest.mock('bcrypt');
 
@@ -41,12 +43,30 @@ describe('UsersService', () => {
       save: jest.fn(),
     };
 
+    const mockReservationClientService = {
+      hasBlockingReservations: jest.fn().mockResolvedValue(false),
+    };
+
+    const mockUserEventsPublisher = {
+      publishUserCreated: jest.fn(),
+      publishUserUpdated: jest.fn(),
+      publishUserDeleted: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         {
           provide: getRepositoryToken(User),
           useValue: mockUsersRepository,
+        },
+        {
+          provide: ReservationClientService,
+          useValue: mockReservationClientService,
+        },
+        {
+          provide: UserEventsPublisher,
+          useValue: mockUserEventsPublisher,
         },
       ],
     }).compile();

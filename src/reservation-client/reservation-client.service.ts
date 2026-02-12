@@ -37,7 +37,9 @@ export class ReservationClientService implements OnModuleInit {
     userIdentifier: string,
     isHost: boolean,
   ): Promise<HasActiveReservationsResponse> {
-    console.log(`[ReservationClientService] calling gRPC with userIdentifier=${userIdentifier}, isHost=${isHost}`);
+    console.log(
+      `[ReservationClientService] calling gRPC with userIdentifier=${userIdentifier}, isHost=${isHost}`,
+    );
     try {
       const response = await firstValueFrom(
         this.reservationService.hasActiveOrFutureReservations({

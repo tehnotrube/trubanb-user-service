@@ -125,7 +125,9 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    console.log(`[canDeleteAccount] checking userId=${userId}, isHost=${isHost}`);
+    console.log(
+      `[canDeleteAccount] checking userId=${userId}, isHost=${isHost}`,
+    );
 
     const reply = await this.reservationClient.hasBlockingReservations(
       userId,

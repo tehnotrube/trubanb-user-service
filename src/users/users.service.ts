@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User, UserRole } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateCredentialsDto } from './dtos/update-credentials.dto';
 import { ReservationClientService } from '../reservation-client/reservation-client.service';

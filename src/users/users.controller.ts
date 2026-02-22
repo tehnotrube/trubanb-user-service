@@ -8,6 +8,7 @@ import {
   HttpCode,
   Delete,
   BadRequestException,
+  Param,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
@@ -18,16 +19,17 @@ import type { AuthenticatedUser } from '../auth/interfaces/authenticated-user.in
 import { UserRole } from '../auth/guards/roles.guard';
 
 @Controller('api/users')
-@UseGuards(KongJwtGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('profile')
+  @UseGuards(KongJwtGuard)
   async getProfile(@CurrentUser() user: AuthenticatedUser) {
     return this.usersService.getProfile(user.id);
   }
 
   @Put('profile')
+  @UseGuards(KongJwtGuard)
   async updateProfile(
     @CurrentUser() user: AuthenticatedUser,
     @Body() updateProfileDto: UpdateProfileDto,
@@ -36,6 +38,7 @@ export class UsersController {
   }
 
   @Put('credentials')
+  @UseGuards(KongJwtGuard)
   async updateCredentials(
     @CurrentUser() user: AuthenticatedUser,
     @Body() updateCredentialsDto: UpdateCredentialsDto,
@@ -44,6 +47,7 @@ export class UsersController {
   }
 
   @Delete('account')
+  @UseGuards(KongJwtGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteAccount(@CurrentUser() user: AuthenticatedUser) {
     const isHost = user.role === UserRole.HOST;
@@ -55,5 +59,10 @@ export class UsersController {
     }
 
     await this.usersService.deleteAccount(user.id);
+  }
+
+  @Get('public/:id')
+  async getPublicProfile(@Param('id') id: string) {
+    return this.usersService.getPublicProfile(id);
   }
 }

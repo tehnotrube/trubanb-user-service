@@ -110,6 +110,24 @@ export class UsersService {
     return this.sanitizeUser(user);
   }
 
+  async getPublicProfile(userId: string) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+    };
+  }
+
   private sanitizeUser(user: User) {
     const { password: _password, ...result } = user;
     return result;
